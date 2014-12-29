@@ -1,0 +1,17 @@
+#!/bin/bash
+# Directorio donde vive la aplicación
+eclipse="/Applications/eclipse2"
+workspace="~/Documents/workspace2"
+
+eclipse_app=$eclipse"/eclipse"
+metadata=$workspace"/.metadata"
+lock_file=$metadata"/.lock"
+plugins=$metadata"/.plugins"
+
+#
+# Remove lock, some plugins files, and start clean in background.
+#
+
+test -f $lock_file & rm $lock_file & echo "Removing lock file..."
+rm -rf $plugins"/*.ui.*" $plugins"/*.ui* && echo "Removing UI plugins...""
+$eclipse_app -clean -refresh > /dev/null 2>&1 & 
