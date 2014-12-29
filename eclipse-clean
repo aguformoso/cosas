@@ -13,5 +13,5 @@ plugins=$metadata"/.plugins"
 #
 
 test -f $lock_file & rm $lock_file & echo "Removing lock file..."
-rm -rf $plugins"/*.ui.*" $plugins"/*.ui* && echo "Removing UI plugins...""
+rm -rf $plugins"/*.ui.*" $plugins"/*.ui*" && echo "Removing UI plugins..."
 $eclipse_app -clean -refresh > /dev/null 2>&1 & 
