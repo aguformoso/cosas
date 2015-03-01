@@ -1,0 +1,44 @@
+#!/bin/bash
+
+BASE_URL=http://data.caida.org/datasets/topology/ark/ipv4/probe-data
+CURRENT_YEAR=$(date +"%Y")
+TEAMS="team-1 team-2 team-3"
+YEARS=$(seq $CURRENT_YEAR 2008)
+YEARS=$(seq 2009 2008)
+
+# case $1 in
+# 	'all')	echo "Fetching all data..."
+# 		wget -q -r -np -nd -A *mty-mxx*,*sao-br*,*sao2-br*,*gig-br*,*scl-cl*,*scl2-cl*,*kna-cl*,*sju-pr* $BASE_URL
+# 		exit 0
+# 	;;
+# 	'fast')
+# 		for team in $TEAMS
+# 		do
+# 			for year in $YEARS
+# 			do
+# 				URLs=$URLs $BASE_URL/$team/$year/
+# 			done
+# 
+# 		done
+# 
+# 		echo $URLs | xargs -n 1 -P 8 wget -q -r -np -nd -A *mty-mxx*,*sao-br*,*sao2-br*,*gig-br*,*scl-cl*,*scl2-cl*,*kna-cl*,*sju-pr* 
+# 		exit 0
+# 	;;
+# esac
+
+
+for year in $YEARS
+do
+	for server in sao-br sao2-br gig-br scl-cl scl2-cl kna-cl sju-pr mty-mx
+	do
+		dir=$server$year
+		[ -d $dir ] && echo "Skipping $dir - already scanned" && continue
+		mkdir $dir
+		echo "Fetching $dir"
+
+		for team in $TEAMS
+		do
+			wget -q --directory-prefix=$dir -r -np -nd -A *$server* $BASE_URL/$team/$year/
+		done
+ 	done
+done

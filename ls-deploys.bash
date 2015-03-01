@@ -7,9 +7,11 @@ noDeployFile() {
  }
 
 DEPLOYFILENAME='deploys'
-BASEDIR='/Users/agustin/git/cosas'
+BASEDIR=$1
 for app in $(ls -d $BASEDIR/* 2>/dev/null)
 do
+	# es necesario que la aplicación cuente con el archivo que indica los archivos que forman parte del deploy.
+
 	[ -f $app/$DEPLOYFILENAME ] || continue
 
 
