@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # coding=UTF-8
+from calendar import monthrange
 
 __author__ = 'agustin'
 
@@ -29,13 +30,14 @@ else:
 # TODO ver cuál es  la etiqueta de mes más larga y dejar ese espacio para el histograma
 if args.meses:
     desde = ahora - timedelta(days=30*args.meses)
+else:
+    desde = datetime(year=2014, month=1, day=1)
 
 histograma = args.histograma
 
-# { app1 : [(deploy1, date1), (deploy2, date 2)] }
 
-apps = dict()
-histogram = dict()
+apps = dict() # { app1 : [(deploy1, date1), (deploy2, date 2)], ... }
+histogram = dict() # { mes1 : [app1, app2], ... }
 
 for app in os.listdir(BASEDIR):
 
@@ -61,29 +63,48 @@ for app in os.listdir(BASEDIR):
 
         deploys.append((deploy, date))
         try:
-            histogram[calendar.month_name[date.month]] += 1
+            histogram[calendar.month_name[date.month]].append(app)
         except KeyError:
-            histogram[calendar.month_name[date.month]] = 1
+            histogram[calendar.month_name[date.month]] = [app]
 
     apps[app] = deploys
 
 # Summary generation
 
-for app in apps.keys():
-    deploys = apps[app]
+# for app in apps.keys():
+#     deploys = apps[app]
+#
+#     if len(deploys) == 0:
+#         continue
+#
+#     print app
+#     for deploy in deploys:
+#         fecha = deploy[1]
+#         print "\t%s\t%s" % (deploy[0], fecha.strftime('%x'))
 
-    if len(deploys) == 0:
+# Per-month summary
+
+for month in histogram.keys():
+    # monthlyApps = list(set(histogram[month])) # get unique instances
+    monthlyApps = histogram[month]
+
+    if len(monthlyApps) == 0:
         continue
 
-    print app
-    for deploy in deploys:
-        fecha = deploy[1]
-        print "\t%s\t%s" % (deploy[0], fecha.strftime('%x'))
+    print month
+    unicas = dict()
+    for monthlyApp in monthlyApps:
+        # print unicas.keys()
+        try: unicas[monthlyApp] += 1
+        except KeyError: unicas[monthlyApp] = 1
+
+    for unica in unicas.keys():
+        print "\t%s (%s)" % (unica, unicas[unica])
 
 # Print histogram
 
 if histograma:
     print "\nHistograma\n===\n"
     for h in histogram.keys():
-        count = histogram[h]
+        count = len(histogram[h])
         print "%s (%s) %s" % (h, count, '|' * count)
