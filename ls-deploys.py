@@ -69,23 +69,9 @@ for app in os.listdir(BASEDIR):
 
     apps[app] = deploys
 
-# Summary generation
-
-# for app in apps.keys():
-#     deploys = apps[app]
-#
-#     if len(deploys) == 0:
-#         continue
-#
-#     print app
-#     for deploy in deploys:
-#         fecha = deploy[1]
-#         print "\t%s\t%s" % (deploy[0], fecha.strftime('%x'))
-
 # Per-month summary
 
 for month in histogram.keys():
-    # monthlyApps = list(set(histogram[month])) # get unique instances
     monthlyApps = histogram[month]
 
     if len(monthlyApps) == 0:
@@ -94,7 +80,6 @@ for month in histogram.keys():
     print month
     unicas = dict()
     for monthlyApp in monthlyApps:
-        # print unicas.keys()
         try: unicas[monthlyApp] += 1
         except KeyError: unicas[monthlyApp] = 1
 
