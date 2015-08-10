@@ -8,7 +8,23 @@
 which file > /dev/null 2>&1  || exit 1
 which iconv > /dev/null 2>&1 || exit 1
 
-dir=conv
+fecha=$(date +"%y-%m-%d-%M-%S")
+dir=convert-$fecha
+
+while getopts ":d:" opt; do
+	case $opt in
+		d)
+			dir=$OPTARG
+			shift 2
+		;;
+
+		\?)
+			echo "Opción inválida: -$OPTARG" >&2
+		;;
+	esac
+done
+
+echo $#
 mkdir $dir
 
 for f
